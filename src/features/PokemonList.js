@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import {
   StyleSheet,
@@ -46,8 +45,6 @@ export default function PokemonList() {
           </TouchableOpacity>
         )}
       />
-
-      <StatusBar style="light" />
     </View>
   );
 }

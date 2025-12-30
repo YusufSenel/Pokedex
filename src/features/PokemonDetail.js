@@ -23,8 +23,8 @@ export default function PokemonDetail({ route }) {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <Text style={styles.id}>N° {pokemonDetail.id} </Text>
-        <Text style={styles.name}> {pokemonDetail.name} </Text>
+        <Text style={styles.id}> N° {pokemonDetail.id} </Text>
+        <Text style={styles.name}> {pokemonDetail.name}</Text>
 
         <Image
           source={{ uri: pokemonDetail.image }}
@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
   id: {
     fontSize: 14,
     color: '#666',
+    backgroundColor: '#F5F5F5',
   },
   name: {
     fontSize: 28,
