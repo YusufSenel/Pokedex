@@ -1,6 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 export default function PokemonList() {
@@ -8,38 +15,80 @@ export default function PokemonList() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    fetch('https://pokeapi.co/api/v2/pokemon?limit=150')
+    fetch('https://pokebuildapi.fr/api/v1/pokemon/limit/151')
       .then((response) => response.json())
-      .then((data) => {
-        setPokemons(data.results);
-      });
+      .then((data) => setPokemons(data));
   }, []);
+
+  const formatId = (id) => id.toString().padStart(3, '0');
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 24, fontWeight: "bold" }}>Pokedex !</Text>
+      <Text style={styles.title}>Pokédex</Text>
+
       <FlatList
         data={pokemons}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => 
-        <TouchableOpacity 
-        onPress={() => navigation.navigate('detail', { pokemon: item })}
-        >
-            <Text> {item.name} </Text>
-        </TouchableOpacity>}
-      >
-      </FlatList>
+        keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={styles.list}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => navigation.navigate('detail', { pokemon: item })}
+          >
+            <Text style={styles.id}>N°{formatId(item.id)}</Text>
 
-      <StatusBar style="auto" />
+            <Image
+              source={{ uri: item.image }}
+              style={styles.image}
+            />
+
+            <Text style={styles.name}>{item.name}</Text>
+          </TouchableOpacity>
+        )}
+      />
+
+      <StatusBar style="light" />
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#D32F2F', // rouge pokedex
+    paddingTop: 50,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#FFF',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  list: {
+    paddingHorizontal: 15,
+  },
+  card: {
+    backgroundColor: '#FFF',
+    borderRadius: 16,
+    padding: 15,
+    marginBottom: 15,
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    elevation: 4,
+  },
+  id: {
+    fontSize: 14,
+    color: '#777',
+    width: 55,
+  },
+  image: {
+    width: 60,
+    height: 60,
+    marginRight: 15,
+  },
+  name: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textTransform: 'capitalize',
   },
 });
