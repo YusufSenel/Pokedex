@@ -8,6 +8,7 @@ import {
   Image,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import PokemonFilterByType from './PokemonFilterByType';
 
 export default function PokemonList() {
   const [pokemons, setPokemons] = useState([]);
@@ -24,6 +25,7 @@ export default function PokemonList() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Pokédex</Text>
+      <PokemonFilterByType pokemons={pokemons}/>
 
       <FlatList
         data={pokemons}
@@ -51,7 +53,7 @@ export default function PokemonList() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#D32F2F', // rouge pokedex
+    backgroundColor: '#D32F2F',
     paddingTop: 50,
   },
   title: {

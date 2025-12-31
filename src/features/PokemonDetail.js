@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react';
 
 export default function PokemonDetail({ route }) {
   const [pokemonDetail, setPokemonDetail] = useState(null);
-  const [pokemonResistances, setPokemonResistances] = useState([]);
+  const [pokemonWeaknesses, setPokemonWeaknesses] = useState([]);
+  const [pokemonResistances, setPokemonReistances] = useState([]);
   const { pokemon } = route.params || {};
 
   useEffect(() => {
@@ -12,9 +13,14 @@ export default function PokemonDetail({ route }) {
       .then((data) => {
         setPokemonDetail(data);
         const weaknesses = data.apiResistances.filter(
-          (resistance) => resistance.damage_multiplier > 1
+          (weakness) => weakness.damage_multiplier > 1
         );
-        setPokemonResistances(weaknesses);
+        setPokemonWeaknesses(weaknesses);
+
+        const resitances = data.apiResistances.filter(
+          (resistance) => resistance.damage_multiplier < 1
+        );
+        setPokemonReistances(resitances);
       });
   }, [pokemon.id]);
 
@@ -48,11 +54,24 @@ export default function PokemonDetail({ route }) {
         {/* FAIBLESSES */}
         <Text style={styles.sectionTitle}>Faiblesses</Text>
         <FlatList
-          data={pokemonResistances}
+          data={pokemonWeaknesses}
           keyExtractor={(item) => item.name}
           horizontal
           renderItem={({ item }) => (
             <View style={styles.weaknessBadge}>
+              <Text style={styles.badgeText}>{item.name}</Text>
+            </View>
+          )}
+        />
+
+        {/* RESISTANCES */}
+        <Text style={styles.sectionTitle}>Résistances</Text>
+        <FlatList
+          data={pokemonResistances}
+          keyExtractor={(item) => item.name}
+          horizontal
+          renderItem={({ item }) => (
+            <View style={styles.resistanceBadge}>
               <Text style={styles.badgeText}>{item.name}</Text>
             </View>
           )}
@@ -65,7 +84,7 @@ export default function PokemonDetail({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#D32F2F', // rouge pokedex
+    backgroundColor: '#D32F2F',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -110,6 +129,13 @@ const styles = StyleSheet.create({
   },
   weaknessBadge: {
     backgroundColor: '#FFCDD2',
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginHorizontal: 5,
+  },
+  resistanceBadge: {
+    backgroundColor: '#b8daa4ff',
     borderRadius: 20,
     paddingHorizontal: 12,
     paddingVertical: 6,
